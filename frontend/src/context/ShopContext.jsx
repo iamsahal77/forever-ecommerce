@@ -11,7 +11,7 @@ const ShopContextProvider = (props) => {
     const delivery_fee = 10;
     const navigate = useNavigate();
     const [search, setSearch] = useState('');
-    const [showSearch, setShowSearch] = useState(false);
+    const [showSearch, setShowSearch] = useState(true);
     const [cartItems, setCartItems] = useState({});
 
     const addToCart = async (itemId, size) => {
