@@ -4,11 +4,12 @@
 @tailwind components;
 @tailwind utilities;
 
-*{
-    font-family: Outfit;
-}
 a.active hr{
     display: block;
+}
+
+*{
+    font-family: Outfit;
 }
 
 .prata-regular {
@@ -16,21 +17,14 @@ a.active hr{
     font-weight: 400;
     font-style: normal;
   }
+
+  ::-webkit-scrollbar{
+    display: none;
+  }
   
-  @media (max-width:640px){
+  @media (max-width:640px) {
     a.active{
         background-color: black;
         color: white;
     }
-  }
-
-  /* Hide scrollbar for Chrome, Safari and Opera */
-.hide-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  
-  /* Hide scrollbar for IE, Edge and Firefox */
-  .hide-scrollbar {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;     /* Firefox */
   }
