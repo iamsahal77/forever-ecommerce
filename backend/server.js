@@ -18,6 +18,7 @@ connectCloudinary()
 app.use(express.json())
 const allowedOrigins = [
   'https://forever-admin-47nki7llo-sahalsahsal2-gmailcoms-projects.vercel.app',
+  'https://forever-frontend-lnkyja69c-sahalsahsal2-gmailcoms-projects.vercel.app',
 ];
 
 app.use(cors({
