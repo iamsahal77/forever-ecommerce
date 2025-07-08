@@ -16,7 +16,14 @@ connectCloudinary()
 
 // middlewares
 app.use(express.json())
-app.use(cors())
+const allowedOrigins = [
+  'https://forever-admin-47nki7llo-sahalsahsal2-gmailcoms-projects.vercel.app',
+];
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true,
+}));
 
 // api endpoints
 app.use('/api/user',userRouter)
