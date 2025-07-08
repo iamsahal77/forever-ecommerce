@@ -7,19 +7,45 @@ const addProduct = async (req, res) => {
 
         const { name, description, price, category, subCategory, sizes, bestseller } = req.body
 
-        const image1 = req.files.image1 && req.files.image1[0]
-        const image2 = req.files.image2 && req.files.image2[0]
-        const image3 = req.files.image3 && req.files.image3[0]
-        const image4 = req.files.image4 && req.files.image4[0]
+        // Get images from formidable's in-memory files
+        const image1 = req.files.image1;
+        const image2 = req.files.image2;
+        const image3 = req.files.image3;
+        const image4 = req.files.image4;
 
-        const images = [image1, image2, image3, image4].filter((item) => item !== undefined)
+        // Formidable may return single file or array
+        const normalize = (file) => (Array.isArray(file) ? file : file ? [file] : []);
+        const images = [
+            ...normalize(image1),
+            ...normalize(image2),
+            ...normalize(image3),
+            ...normalize(image4)
+        ];
 
         let imagesUrl = await Promise.all(
             images.map(async (item) => {
-                let result = await cloudinary.uploader.upload(item.path, { resource_type: 'image' });
-                return result.secure_url
+                // Upload buffer to Cloudinary
+                const result = await cloudinary.uploader.upload_stream({ resource_type: 'image' }, (error, result) => {
+                    if (error) throw error;
+                    return result;
+                });
+                // We need to wrap the stream logic in a Promise
+                return await new Promise((resolve, reject) => {
+                    const stream = cloudinary.uploader.upload_stream({ resource_type: 'image' }, (error, result) => {
+                        if (error) return reject(error);
+                        resolve(result.secure_url);
+                    });
+                    // item.filepath is a Buffer in memory
+                    if (item && item._writeStream && item._writeStream.buffer) {
+                        stream.end(item._writeStream.buffer);
+                    } else if (item && item.buffer) {
+                        stream.end(item.buffer);
+                    } else {
+                        reject(new Error('No buffer found for image upload.'));
+                    }
+                });
             })
-        )
+        );
 
         const productData = {
             name,
